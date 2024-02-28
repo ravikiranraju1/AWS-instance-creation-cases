@@ -1,0 +1,74 @@
+                                                 How To configure Docker & Docker-Compose in AWS EC2 [Amazon Linux 2023 AMI]
+
+Configuring Docker and Docker Compose on an AWS EC2 instance running Amazon Linux involves several steps. Below is a guide to help you set it up:
+
+### 1. Launch an EC2 Instance
+
+- Go to the AWS Management Console and launch a new EC2 instance with the Amazon Linux AMI 2023.
+- Ensure that the security group associated with the instance allows inbound traffic on ports 22 (SSH) and 80/443 (if you plan to run web services).
+
+### 2. Connect to Your EC2 Instance
+
+- Once your instance is running, connect to it via SSH using your preferred SSH client.
+
+### 3. Update the System
+
+- It's a good practice to update the system packages to the latest versions:
+
+```bash
+sudo yum update -y
+```
+
+### 4. Install Docker
+
+- Install Docker CE (Community Edition) using the following commands:
+
+```bash
+sudo yum install -y docker
+sudo service docker start
+sudo usermod -a -G docker ec2-user
+```
+
+- The last command adds the current user (in this case, `ec2-user`) to the docker group to avoid needing to use `sudo` each time you run docker commands.
+
+### 5. Install Docker Compose
+
+- Docker Compose is not included in the Amazon Linux repositories. You can install it by executing the following commands:
+
+```bash
+sudo curl -L "https://github.com/docker/compose/releases/download/<VERSION>/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+```
+
+- Replace `<VERSION>` with the latest Docker Compose version. You can find the latest version on the [Docker Compose GitHub releases page](https://github.com/docker/compose/releases).
+
+### 6. Verify Docker and Docker Compose Installation
+
+- After installation, verify Docker and Docker Compose installation by checking their versions:
+
+```bash
+docker --version
+docker-compose --version
+```
+
+### 7. Configure Docker to Start on Boot
+
+- Ensure Docker starts automatically on system boot:
+
+```bash
+sudo chkconfig docker on
+```
+
+### 8. Start Using Docker and Docker Compose
+
+- At this point, Docker and Docker Compose should be installed and ready to use. You can now start deploying and managing your containers.
+
+### Important Note:
+
+- Make sure you understand security best practices for running containers in production environments.
+- Secure your Docker daemon and containers according to best practices.
+- Always use the latest stable versions of Docker and Docker Compose.
+- Monitor your resources and consider optimization techniques for better performance.
+- Regularly update your system and Docker components to patch security vulnerabilities and benefit from the latest features.
+
+By following these steps, you should be able to configure Docker and Docker Compose on your AWS EC2 instance running Amazon Linux 2023 AMI.
